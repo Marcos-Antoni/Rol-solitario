@@ -1,8 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+
 import { DataTable } from "../../types/DataTable";
-import { setQueryURL, getQueryURL } from "../../utils/URL";
+import { setQueryURL } from "../../utils/URL";
 import { CreateRandomSentence } from "../../utils/CreateRandomSentence";
+import useURL from "../../utils/hook/useURL";
 import Button from "../Button";
 
 interface typeParentGenerator {
@@ -31,20 +33,16 @@ const ParentGenerator = ({
   name,
 }: typeParentGenerator) => {
   //  Codigo del componente ----------------------------------------------------------------------------
-  const [result, setResult] = useState<string>("");
+  const { getQueryURL } = useURL();
+  const [result, setResult] = useState<string>(
+    getQueryURL(name) || ""
+  );
 
   const generarFrace = () => {
     const Frace = CreateRandomSentence(dataTable, name);
     setResult(Frace);
     setQueryURL(name, Frace);
   };
-
-  useEffect(() => {
-    if (!name) return;
-
-    const Frace = getQueryURL(name) || "";
-    if (Frace) setResult(Frace);
-  }, [name]);
 
   // Renderisacion por errores -----------------------------------------------------------------------
   if (!name) return <NameMissing />;

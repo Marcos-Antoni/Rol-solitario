@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from "vitest";
+import { describe, it, expect, afterEach, vi } from "vitest";
 import { render, fireEvent, cleanup } from "@testing-library/react";
 import ParentGenerator from "../src/app/components/Factory/ParentGenerator";
 import { getQueryURL, setQueryURL } from "../src/app/utils/URL";
@@ -16,6 +16,14 @@ const FNRender = (
     <ParentGenerator dataTable={dataTable} name={name} />
   );
 };
+
+vi.mock("next/navigation", () => ({
+  useSearchParams: vi.fn(() => {
+    return {
+      toString: vi.fn(() => window.location.href),
+    };
+  }),
+}));
 
 describe("Given ParentGenerator", () => {
   describe("When le pasamos dataTable o name de forma incorrecta", () => {

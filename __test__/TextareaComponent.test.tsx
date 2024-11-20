@@ -1,7 +1,15 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, fireEvent } from "@testing-library/react";
 import TextAreaComponent from "../src/app/components/TextareaComponent";
 import { getQueryURL, setQueryURL } from "../src/app/utils/URL";
+
+vi.mock("next/navigation", () => ({
+  useSearchParams: vi.fn(() => {
+    return {
+      toString: vi.fn(() => window.location.href),
+    };
+  }),
+}));
 
 const placeholder = "Da un contexto sobre tu NPC...";
 
@@ -49,7 +57,7 @@ describe("Given TextAreaComponent", () => {
   });
 
   describe("When el componente se renderisa con datos de la URL", () => {
-    it("Then el componente debe tener el valor del query contexto", () => {
+    it("Then el componente debe tener el valor del query contexto", async () => {
       setQueryURL("contexto", "Hola");
 
       const { getByPlaceholderText, unmount } = render(

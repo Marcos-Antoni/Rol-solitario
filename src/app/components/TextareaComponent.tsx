@@ -1,17 +1,21 @@
 "use client";
 import { useState, useEffect } from "react";
 import { setQueryURL, getQueryURL } from "../utils/URL";
+import useURL from "../utils/hook/useURL";
 
 const TextAreaComponent: React.FC = () => {
-  const [value, setValue] = useState<string>("");
+  const { getQueryURL: getURL } = useURL();
+
+  const [value, setValue] = useState<string>(
+    getURL("contexto") || ""
+  );
 
   useEffect(() => {
     if (value) setQueryURL("contexto", value);
   }, [value]);
 
   useEffect(() => {
-    const initialValue = getQueryURL("contexto") || "";
-    setValue(initialValue);
+    setValue(getQueryURL("contexto") || "");
   }, []);
 
   return (
