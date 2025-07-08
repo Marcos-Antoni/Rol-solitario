@@ -57,7 +57,6 @@ export async function obtenerRespuesta(props: Props) {
 
     return text;
   } catch (error) {
-    console.error(error);
-    return "Error de OpenAI Buelbe a intentarlo";
+    return `Error de OpenAI Buelbe a intentarlo ${process.env.GEMINI_KEY}`;
   }
 }

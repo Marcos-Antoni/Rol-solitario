@@ -28,9 +28,7 @@ const NPCGenerator = () => {
     const filterQueryURL = obtenerFiltros(queryURL);
 
     if (filterQueryURL.length) {
-      setRespuesta(
-        `Faltan los datos de la URL(${filterQueryURL.join(", ")})`
-      );
+      setRespuesta(`Faltan los datos de la URL(${filterQueryURL.join(", ")})`);
       return;
     }
 
@@ -44,6 +42,7 @@ const NPCGenerator = () => {
   };
 
   const generarRespuesta = async (queryURL: Props) => {
+    console.log(process.env.GEMINI_KEY);
     setRespuesta("Generando NPC...");
     const res = await obtenerRespuesta(queryURL);
     setRespuesta(res);
