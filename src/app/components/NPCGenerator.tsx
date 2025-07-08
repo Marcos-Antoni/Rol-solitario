@@ -42,7 +42,6 @@ const NPCGenerator = () => {
   };
 
   const generarRespuesta = async (queryURL: Props) => {
-    console.log(process.env.GEMINI_KEY);
     setRespuesta("Generando NPC...");
     const res = await obtenerRespuesta(queryURL);
     setRespuesta(res);
