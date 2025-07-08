@@ -1,8 +1,8 @@
 "use server";
-import OpenAI from "openai";
+import { GoogleGenAI } from "@google/genai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_KEY,
+const gemini = new GoogleGenAI({
+  apiKey: process.env.GEMINI_KEY,
 });
 
 export interface Props {
@@ -15,35 +15,47 @@ export interface Props {
 
 export async function obtenerRespuesta(props: Props) {
   try {
-    const respuesta = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content:
-            "Eres un asistente que crea NPC con la informacion que el usuraio te pasa, el NPC que crees debe ser una descripsion brebe y al grano",
-        },
-        {
-          role: "user",
-          content: `
-          Contexto: ${props.contexto}
-          Bacico: ${props.bacico}
-          Motivacion: ${props.motivacion}
-          Personalidad: ${props.personalidad}
-          Aliniamientos: ${props.aliniamientos}
-          -------------------------------------------
-          Con estos datos crea un NPC completo para un juego de rol o una historia.
+    const config = {
+      thinkingConfig: {
+        thinkingBudget: -1,
+      },
+      responseMimeType: "text/plain",
+    };
 
-          El texto no debe superar los 1000 caracteres.
+    const model = "gemini-2.5-flash";
 
-          `,
-        },
-      ],
+    const contents = [
+      {
+        role: "user",
+        parts: [
+          {
+            text: `
+            Contexto: ${props.contexto}
+            Bacico: ${props.bacico}
+            Motivacion: ${props.motivacion}
+            Personalidad: ${props.personalidad}
+            Aliniamientos: ${props.aliniamientos}
+            -------------------------------------------
+            Con estos datos crea un NPC completo para un juego de rol o una historia.
+
+            El texto no debe superar los 1000 caracteres.
+            `,
+          },
+        ],
+      },
+    ];
+
+    const response = await gemini.models.generateContentStream({
+      model,
+      config,
+      contents,
     });
+    let text = "";
+    for await (const chunk of response) {
+      text += chunk.text;
+    }
 
-    return (
-      respuesta.choices[0].message.content || "Buelbe a intentarlo"
-    );
+    return text;
   } catch (error) {
     console.error(error);
     return "Error de OpenAI Buelbe a intentarlo";
