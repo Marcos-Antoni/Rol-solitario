@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@google/genai": "^1.8.0",
-    "gemini": "^7.5.2",
     "mime": "^4.0.7",
     "next": "15.0.2",
     "openai": "^4.71.1",
